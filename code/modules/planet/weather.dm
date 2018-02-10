@@ -17,14 +17,19 @@
 			W.holder = src
 
 /datum/weather_holder/proc/change_weather(var/new_weather)
+	next_weather_shift = world.time + rand(20, 30) MINUTES
+	if(current_weather && new_weather == current_weather.name) // If the weather isn't changing, we just update temp
+		update_temperature()
+		return
+
 	var/old_light_modifier = null
 	if(current_weather)
 		old_light_modifier = current_weather.light_modifier // We store the old one, so we can determine if recalculating the sun is needed.
 	current_weather = allowed_weather_types[new_weather]
-	next_weather_shift = world.time + rand(20, 30) MINUTES
 
 	update_icon_effects()
 	update_temperature()
+	current_weather.start_effects()
 	if(old_light_modifier && current_weather.light_modifier != old_light_modifier) // Updating the sun should be done sparingly.
 		our_planet.update_sun()
 	message_admins("[our_planet.name]'s weather is now [new_weather], with a temperature of [temperature]&deg;K ([temperature - T0C]&deg;C | [temperature * 1.8 - 459.67]&deg;F).")
@@ -65,3 +70,5 @@
 
 /datum/weather/proc/process_effects()
 	return
+
+/datum/weather/proc/start_effects()

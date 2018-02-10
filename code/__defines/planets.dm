@@ -8,7 +8,8 @@
 #define WEATHER_HAIL				"hail"
 #define WEATHER_WINDY				"windy"
 #define WEATHER_HOT					"hot"
-#define WEATHER_BLOOD_MOON			"blood moon" // For admin fun or cult later on.
+#define WEATHER_BLOOD_MOON			"blood moon" 	// For admin fun or cult later on.
+#define WEATHER_CYCLONE				"arctic cyclone"// For admin fun only
 
 #define PLANET_PROCESS_WEATHER	0x1
 #define PLANET_PROCESS_SUN		0x2

@@ -2,9 +2,6 @@ var/datum/planet/sif/planet_sif = null
 
 /datum/planet/sif
 	name = "Sif"
-
-/datum/planet/sif
-	name = "Sif"
 	desc = "Sif is a terrestrial planet in the Vir system. It is somewhat earth-like, in that it has oceans, a \
 	breathable atmosphere, a magnetic field, weather, and similar gravity to Earth. It is currently the capital planet of Vir. \
 	Its center of government is the equatorial city and site of first settlement, New Reykjavik." // Ripped straight from the wiki.
@@ -118,7 +115,8 @@ var/datum/planet/sif/planet_sif = null
 		WEATHER_RAIN		= new /datum/weather/sif/rain(),
 		WEATHER_STORM		= new /datum/weather/sif/storm(),
 		WEATHER_HAIL		= new /datum/weather/sif/hail(),
-		WEATHER_BLOOD_MOON	= new /datum/weather/sif/blood_moon()
+		WEATHER_BLOOD_MOON	= new /datum/weather/sif/blood_moon(),
+		WEATHER_CYCLONE		= new /datum/weather/sif/arctic_cyclone()
 		)
 	roundstart_weather_chances = list(
 		WEATHER_CLEAR		= 30,
@@ -303,3 +301,70 @@ datum/weather/sif
 	transition_chances = list(
 		WEATHER_BLOODMOON = 100
 		)
+
+// Admin-only deathstorm. It will fuck shit up
+/datum/weather/sif/arctic_cyclone
+	name = "arctic cyclone"
+	icon_state = "hail"
+	temp_high = 223.15	// -50C
+	temp_low =  213.15	// -60C
+	light_modifier = 0.1		// Blot out the sun
+	flight_falure_modifier = 50	// Don't fly if you value your life. Or do fly if an admin needs a rescue effort
+	transition_chances = list(
+		WEATHER_CYCLONE = 100
+		)
+	var/list/target_windows = list()
+
+// The idea here is to find all the windows to murderize once, instead of having to do it every time like it does for mobs outside. Since windows don't tend to move.
+/datum/weather/sif/arctic_cyclone/start_effects()
+	for(var/obj/structure/window/W in simulated_windows)
+		if(W.z in holder.our_planet.expected_z_levels)
+			for(var/dir_checked in cardinal)
+				var/turf/simulated/floor/T = get_step(W.loc, dir_checked)
+				if(istype(T) && T.outdoors)
+					target_windows |= W
+
+/*		// Iterate over a list of simulated windows, as opposed to a list of outdoor turfs. Should be shorter? I hope? Really have no idea, but it's better than world --Ater
+	for(var/turf/simulated/floor in outdoor_turfs)
+		if(S.z in holder.our_planet.expected_z_levels)
+			for(var/dir_checked in cardinal)
+				var/turf/simulated/floor/T = get_step(S, dir_checked)
+				if(istype(T) && !T.outdoors)
+					for(var/obj/structure/window/W in T)
+						target_windows |= W
+*/
+
+/datum/weather/sif/arctic_cyclone/process_effects()
+	// Windows exposed to the winds shall perish, bringing the bitter winds inwards.
+	for(var/obj/structure/window/W in target_windows)
+		W.take_damage(rand(1,2), pick(prob(80); 0, prob(20); 1))
+		if(!W)
+			target_windows -= W
+
+	// Pain and agony to anyone outside
+	for(var/mob/living/L in living_mob_list)
+		if(L.z in holder.our_planet.expected_z_levels)
+			var/turf/T = get_turf(L)
+			if(!T.outdoors)
+				continue // They're indoors, so no need to pelt them with ice.
+
+			var/target_zone = pick(BP_ALL)
+			var/amount_blocked = L.run_armor_check(target_zone, "melee")
+			var/amount_soaked = L.get_armor_soak(target_zone, "melee")
+			var/brute = rand(10, 15)
+			var/burn = rand(0, 5)
+
+			if(amount_blocked >= 100)
+				continue // No need to apply damage.
+
+			if((brute -= amount_soaked) <= 0)
+				continue // No need to apply damage.
+
+			if(ishuman(L))
+				var/mob/living/carbon/human/M = L
+				M.take_overall_damage(brute, burn, 1, 0, "hail")
+			else
+				L.apply_damage(brute, BRUTE, target_zone, amount_blocked, amount_soaked, used_weapon = "hail")
+				L.apply_damage(burn,  BURN,  target_zone, amount_blocked, amount_soaked, used_weapon = "hail")
+
+			to_chat(L, "<span class='warning'>The bitter cold wind and driving hail [L.can_feel_pain() ? "feels like it cuts right through you" : "damages you"]!</span>")

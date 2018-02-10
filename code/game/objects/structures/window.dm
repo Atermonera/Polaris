@@ -1,3 +1,5 @@
+var/list/simulated_windows = list()	// Global list of all windows in a simulated environ
+
 /obj/structure/window
 	name = "window"
 	desc = "A window."
@@ -383,6 +385,9 @@
 	update_nearby_tiles(need_rebuild=1)
 	update_nearby_icons()
 
+	if(istype(get_turf(Loc), /turf/simulated))
+		simulated_windows |= src
+
 
 /obj/structure/window/Destroy()
 	density = 0
@@ -391,6 +396,9 @@
 	. = ..()
 	for(var/obj/structure/window/W in orange(location, 1))
 		W.update_icon()
+
+	if(istype(get_turf(loc), /turf/simulated))
+		simulated_windows -= src
 
 /obj/structure/window/Move()
 	var/ini_dir = dir
