@@ -305,11 +305,11 @@ var/list/wrapped_species_by_ref = list()
 	var/new_eyes = input("Pick a new color for your eyes.","Eye Color", current_color) as null|color
 	if(!new_eyes)
 		return
-	
+
 	shapeshifter_set_eye_color(new_eyes)
 
 /mob/living/carbon/human/proc/shapeshifter_set_eye_color(var/new_eyes)
-	
+
 	var/list/new_color_rgb_list = hex2rgb(new_eyes)
 	// First, update mob vars.
 	r_eyes = new_color_rgb_list[1]
@@ -322,3 +322,23 @@ var/list/wrapped_species_by_ref = list()
 
 	update_icons_body()
 	update_eyes()
+
+/mob/living/carbon/human/proc/shapeshifter_select_skin_tone()
+	set name = "Select Skin Tone"
+	set category = "Abilities"
+
+	if(stat || world.time < last_special)
+		return
+
+	last_special = world.time + 50
+
+	var/current_color = s_tone
+	var/new_tone = input("Pick a new skin tone (0-220).","Skin Tone", current_color) as null|num
+	if(!new_tone)
+		return
+
+	shapeshifter_set_skin_tone(new_tone)
+
+/mob/living/carbon/human/proc/shapeshifter_set_skin_tone(var/new_tone)
+	s_tone = new_tone
+	update_icons_body()

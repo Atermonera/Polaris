@@ -23,18 +23,28 @@
 	male_sneeze_sound = 'sound/effects/mob_effects/sneeze.ogg'
 	female_sneeze_sound = 'sound/effects/mob_effects/f_sneeze.ogg'
 
-	unarmed_types = list(/datum/unarmed_attack/stomp, /datum/unarmed_attack/kick, /datum/unarmed_attack/punch, /datum/unarmed_attack/bite)
-	has_organ =     list(O_BRAIN = /obj/item/organ/internal/brain/slime, O_EYES = /obj/item/organ/internal/eyes) // Slime core.
+	unarmed_types = list(
+			/datum/unarmed_attack/stomp,
+			/datum/unarmed_attack/kick,
+			/datum/unarmed_attack/punch,
+			/datum/unarmed_attack/bite
+		)
+
+	has_organ =     list(
+			O_BRAIN = /obj/item/organ/internal/brain/slime,
+			O_EYES = /obj/item/organ/internal/eyes
+		)
+
 	heal_rate = 0		// Avatars don't naturally heal like prometheans, at least not for now
 	inherent_verbs = list(
-		/mob/living/carbon/human/proc/shapeshifter_select_shape,
-		/mob/living/carbon/human/proc/shapeshifter_select_colour,
-		/mob/living/carbon/human/proc/shapeshifter_select_hair,
-		/mob/living/carbon/human/proc/shapeshifter_select_hair_colors,
-		/mob/living/carbon/human/proc/shapeshifter_select_gender,
-		/mob/living/carbon/human/proc/regenerate,
-		/mob/living/carbon/human/proc/shapeshifter_change_opacity,
-		/mob/living/carbon/human/proc/exit_vr
+			/mob/living/carbon/human/proc/shapeshifter_select_shape,
+			/mob/living/carbon/human/proc/shapeshifter_select_colour,
+			/mob/living/carbon/human/proc/shapeshifter_select_hair,
+			/mob/living/carbon/human/proc/shapeshifter_select_hair_colors,
+			/mob/living/carbon/human/proc/shapeshifter_select_gender,
+			/mob/living/carbon/human/proc/regenerate,
+			/mob/living/carbon/human/proc/shapeshifter_change_opacity,
+			/mob/living/carbon/human/proc/exit_vr
 		)
 
 
@@ -57,7 +67,13 @@
 	if(src.icon_state == "promethean")
 		icon_state = lowertext(src.species.get_bodytype(src))
 		shapeshifter_change_species("Virtual Reality [src.species.get_bodytype(src)]")
+		if(species.appearance_flags && HAS_SKIN_TONE)
+			verbs -= /mob/living/carbon/human/proc/shapeshifter_select_colour
+			verbs += /mob/living/carbon/human/proc/shapeshifter_select_skin_tone
 	else
+		if(species.appearance_flags && HAS_SKIN_TONE)
+			verbs += /mob/living/carbon/human/proc/shapeshifter_select_colour
+			verbs -= /mob/living/carbon/human/proc/shapeshifter_select_skin_tone
 		icon_state = "promethean"
 		shapeshifter_change_species(SPECIES_VR)
 
