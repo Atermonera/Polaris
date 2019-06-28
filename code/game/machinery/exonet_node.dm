@@ -1,3 +1,5 @@
+GLOBAL_LIST_EMPTY(exonet_nodes)
+
 /obj/machinery/exonet_node
 	name = "exonet node"
 	desc = null // Gets written in New()
@@ -15,6 +17,7 @@
 	var/opened = 0
 
 	var/list/logs = list() // Gets written to by exonet's send_message() function.
+	var/decryptkey = "password"
 
 // Proc: New()
 // Parameters: None
@@ -37,6 +40,14 @@
 
 	desc = "This machine is one of many, many nodes inside [using_map.starsys_name]'s section of the Exonet, connecting the [using_map.station_short] to the rest of the system, at least \
 	electronically."
+
+// Proc:  initialize()
+// Param: None
+// Description: Configures the server for use
+/obj/machinery/exonet_node/initialize()
+	GLOB.exonet_nodes |= src
+	generate_key()
+	return ..()
 
 // Proc: update_icon()
 // Parameters: None
@@ -188,3 +199,10 @@
 	var/timestamp = "[stationdate2text()] [stationtime2text()]"
 	var/msg = "[timestamp] | FROM [origin_address] TO [target_address] | TYPE: [data_type] | CONTENT: [content]"
 	logs.Add(msg)
+
+// Proc:  generate_key()
+// Param: None
+// Desc:  Generates a random password for the server consisting of one adjective, one verb, and one numeric digit
+/obj/machinery/message_server/proc/generate_key()
+	decryptkey = pick(adjectives) + pick(verbs) + pick(0,1,2,3,4,5,6,7,8,9)
+	return

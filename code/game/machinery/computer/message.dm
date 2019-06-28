@@ -53,7 +53,7 @@
 			screen = 2
 			spark_system.set_up(5, 0, src)
 			src.spark_system.start()
-			var/obj/item/weapon/paper/monitorkey/MK = new/obj/item/weapon/paper/monitorkey
+			var/obj/item/weapon/paper/monitorkey/MK = new/obj/item/weapon/paper/monitorkey(linkedServer)
 			MK.loc = src.loc
 			// Will help make emagging the console not so easy to get away with.
 			MK.info += "<br><br><font color='red'>£%@%(*$%&(£&?*(%&£/{}</font>"
@@ -505,18 +505,38 @@
 
 
 /obj/item/weapon/paper/monitorkey
-	//..()
 	name = "Monitor Decryption Key"
-	var/obj/machinery/message_server/server = null
 
-/obj/item/weapon/paper/monitorkey/New()
+// If S is specified, it provides the key for a particular machine. Otherwise, it provides keys for all machines
+/obj/item/weapon/paper/monitorkey/initialize(var/obj/machinery/S)
 	..()
+	info = "<center><h2>Daily Key Reset</h2></center><br>"
+	info_links = info
+	icon_state = "paper_words"
+
+	if(S)
+		if(istype(S, /ob/machinery/message_server))
+			var/obj/machinery/message_server/M = S
+			info_links += "The PDA message monitor's key is '[M.decryptkey]'.<br>"
+			return
+		else if(istyle(S, /obj/machinery/exonet_node))
+			var/obj/machinery/exonet_node/E = S
+			info_links += "The PDA message monitor's key is '[E.decryptkey]'.<br>"
+			return
+
 	spawn(10)
 		if(message_servers)
 			for(var/obj/machinery/message_server/server in message_servers)
-				if(!isnull(server))
-					if(!isnull(server.decryptkey))
-						info = "<center><h2>Daily Key Reset</h2></center><br>The new message monitor key is '[server.decryptkey]'.<br>Please keep this a secret and away from the clown.<br>If necessary, change the password to a more secure one."
-						info_links = info
-						icon_state = "paper_words"
-						break
+				if(!isnull(server) && !isnull(server.decryptkey))
+					info += "The new PDA message monitor key is '[server.decryptkey]'.<br>"
+		if(GLOB.exonet_nodes)
+			for(var/obj/machinery/exonet_node/server in GLOB.exonet_nodes)
+				if(!isnull(server) && !isnull(server.decryptkey))
+					info += "The new communicator message monitor key is [server.decryptkey]'.<br>"
+
+		if(info != "<center><h2>Daily Key Reset</h2></center><br>") // If more stuff (i.e., keys) got appended
+			info += "Please keep this a secret.<br>If necessary, change any passwords to more secure ones."
+
+		else
+			info += "Your installation is not outfitted with any PDA or communicator messaging servers."
+	return
