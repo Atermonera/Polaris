@@ -508,18 +508,18 @@
 	name = "Monitor Decryption Key"
 
 // If S is specified, it provides the key for a particular machine. Otherwise, it provides keys for all machines
-/obj/item/weapon/paper/monitorkey/initialize(var/obj/machinery/S)
+/obj/item/weapon/paper/monitorkey/Initialize(var/obj/machinery/S)
 	..()
 	info = "<center><h2>Daily Key Reset</h2></center><br>"
 	info_links = info
 	icon_state = "paper_words"
 
 	if(S)
-		if(istype(S, /ob/machinery/message_server))
+		if(istype(S, /obj/machinery/message_server))
 			var/obj/machinery/message_server/M = S
 			info_links += "The PDA message monitor's key is '[M.decryptkey]'.<br>"
 			return
-		else if(istyle(S, /obj/machinery/exonet_node))
+		else if(istype(S, /obj/machinery/exonet_node))
 			var/obj/machinery/exonet_node/E = S
 			info_links += "The PDA message monitor's key is '[E.decryptkey]'.<br>"
 			return

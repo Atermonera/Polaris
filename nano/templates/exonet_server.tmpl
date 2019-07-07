@@ -1,0 +1,35 @@
+<!-- Header: Date, time, connection level, as communicator -->
+{{if data.mode != 0}}
+	<div>
+		<!-- Logged in as Username --> <!-- Logout Button -->
+	</div>
+{{/if}}
+<!-- Linked exonet node power/general condition -->
+<!-- PDA Port status -->
+<!-- Communicator Port status -->
+<!-- Newscaster Port status -->
+<hr>
+
+<!-- Login -->
+{{if data.mode == 0}}
+	<div class="item">
+		<div class="itemLabel">
+			Username:
+		</div>
+		<div class="itemContent">
+			<!-- <input type='text' id='uname' name='uname' style='width:250px; background-color:white;'> -->
+		</div>
+	</div>
+	<div class="item">
+		<div class="itemLabel">
+			Password:
+		</div>
+		<div class="itemContent">
+			<!-- <input type='text' id='psswd' name='psswd' style='width:250px; background-color:white;'> -->
+		</div>
+	</div>
+	
+		<!-- if bad login, "Err: Bad login" -->
+	</div>
+
+{{/if}}

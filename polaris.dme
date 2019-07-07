@@ -905,6 +905,7 @@
 #include "code\game\objects\items\devices\communicator\integrated.dm"
 #include "code\game\objects\items\devices\communicator\messaging.dm"
 #include "code\game\objects\items\devices\communicator\phone.dm"
+#include "code\game\objects\items\devices\communicator\server.dm"
 #include "code\game\objects\items\devices\communicator\UI.dm"
 #include "code\game\objects\items\devices\PDA\cart.dm"
 #include "code\game\objects\items\devices\PDA\chatroom.dm"

@@ -191,3 +191,8 @@
 	name = T_BOARD("RCON remote control console")
 	build_path = /obj/machinery/computer/rcon
 	origin_tech = list(TECH_DATA = 4, TECH_ENGINEERING = 3, TECH_POWER = 5)
+
+/obj/item/weapon/circuitboard/communicator_monitor
+	name = T_BOARD("Communicator server console")
+	build_path = /obj/machinery/computer/communicator_server
+	origin_tech = list(TECH_DATA = 6)

@@ -43,7 +43,7 @@ Used In File(s): code\game\machinery/exonet_node.dm
 <div class="statusDisplay" style="height: 250px; overflow: auto;">
 	{{for data.logs}}
 		<div class='item'>
-			{{:value}}
+			{{:value.date}} {{:value.time}} | FROM {{:value.from_address}} | TO {{:value.to_address}} | TYPE: {{:value.type}} | CONTENT: {{:value.content}}
 		</div>
 	{{/for}}
 </div>

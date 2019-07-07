@@ -45,9 +45,13 @@ GLOBAL_LIST_EMPTY(exonet_nodes)
 // Proc:  initialize()
 // Param: None
 // Description: Configures the server for use
-/obj/machinery/exonet_node/initialize()
+/obj/machinery/exonet_node/Initialize()
 	GLOB.exonet_nodes |= src
 	generate_key()
+	return ..()
+
+/obj/machinery/exonet_node/Destroy()
+	GLOB.exonet_nodes -= src
 	return ..()
 
 // Proc: update_icon()
@@ -186,7 +190,7 @@ GLOBAL_LIST_EMPTY(exonet_nodes)
 // Parameters: None
 // Description: Helper proc to get a reference to an Exonet node.
 /proc/get_exonet_node()
-	for(var/obj/machinery/exonet_node/E in machines)
+	for(var/obj/machinery/exonet_node/E in GLOB.exonet_nodes)
 		if(E.on)
 			return E
 
@@ -196,14 +200,19 @@ GLOBAL_LIST_EMPTY(exonet_nodes)
 // Description: This writes to the logs list, so that people can see what people are doing on the Exonet ingame.  Note that this is not an admin logging function.
 // 		Communicators are already logged seperately.
 /obj/machinery/exonet_node/proc/write_log(var/origin_address, var/target_address, var/data_type, var/content)
-	//var/timestamp = time2text(station_time_in_ticks, "hh:mm:ss")
-	var/timestamp = "[stationdate2text()] [stationtime2text()]"
-	var/msg = "[timestamp] | FROM [origin_address] TO [target_address] | TYPE: [data_type] | CONTENT: [content]"
+	var/list/msg = list(
+			"date" = stationdate2text(),
+			"time" = stationtime2text(),
+			"from_address" = origin_address,
+			"to_address" = target_address,
+			"msg_type" = data_type,
+			"content" = content
+		)
 	logs.Add(msg)
 
 // Proc:  generate_key()
 // Param: None
 // Desc:  Generates a random password for the server consisting of one adjective, one verb, and one numeric digit
-/obj/machinery/message_server/proc/generate_key()
-	decryptkey = pick(adjectives) + pick(verbs) + pick(0,1,2,3,4,5,6,7,8,9)
+/obj/machinery/exonet_node/proc/generate_key()
+	decryptkey = pick(adjectives) + pick(verbs) + pick("0","1","2","3","4","5","6","7","8","9")
 	return
