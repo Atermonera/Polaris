@@ -936,6 +936,13 @@ Note that amputating the affected organ does in fact remove the infection from t
 
 			qdel(src)
 
+	if(victim.l_hand)
+		if(istype(victim.l_hand,/obj/item/weapon/material/twohanded)) //if they're holding a two-handed weapon, drop it now they've lost a hand
+			victim.l_hand.update_held_icon()
+	if(victim.r_hand)
+		if(istype(victim.r_hand,/obj/item/weapon/material/twohanded))
+			victim.r_hand.update_held_icon()
+
 /****************************************************
 			   HELPERS
 ****************************************************/
@@ -1332,12 +1339,16 @@ Note that amputating the affected organ does in fact remove the infection from t
 		return english_list(flavor_text)
 
 // Returns a list of the clothing (not glasses) that are covering this part
-/obj/item/organ/external/proc/get_covering_clothing()
+/obj/item/organ/external/proc/get_covering_clothing(var/target_covering)	// target_covering checks for mouth/eye coverage
 	var/list/covering_clothing = list()
+
+	if(!target_covering)
+		target_covering = src.body_part
+
 	if(owner)
-		var/list/protective_gear = list(owner.head, owner.wear_mask, owner.wear_suit, owner.w_uniform, owner.gloves, owner.shoes)
+		var/list/protective_gear = list(owner.head, owner.wear_mask, owner.wear_suit, owner.w_uniform, owner.gloves, owner.shoes, owner.glasses)
 		for(var/obj/item/clothing/gear in protective_gear)
-			if(gear.body_parts_covered & src.body_part)
+			if(gear.body_parts_covered & target_covering)
 				covering_clothing |= gear
 			if(LAZYLEN(gear.accessories))
 				for(var/obj/item/clothing/accessory/bling in gear.accessories)

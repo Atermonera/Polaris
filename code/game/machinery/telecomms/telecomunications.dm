@@ -122,7 +122,7 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 		var/turf/position = get_turf(src)
 		listening_level = position.z
 
-/obj/machinery/telecomms/initialize()
+/obj/machinery/telecomms/Initialize()
 	if(autolinkers.len)
 		// Links nearby machines
 		if(!long_range_link)
@@ -317,7 +317,7 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 	netspeed = 40
 	var/list/telecomms_map
 
-/obj/machinery/telecomms/hub/initialize()
+/obj/machinery/telecomms/hub/Initialize()
 	. = ..()
 	LAZYINITLIST(telecomms_map)
 
@@ -370,6 +370,10 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 	long_range_link = 1
 	var/broadcasting = 1
 	var/receiving = 1
+
+/obj/machinery/telecomms/relay/forceMove(var/newloc)
+	. = ..(newloc)
+	listening_level = z
 
 /obj/machinery/telecomms/relay/receive_information(datum/signal/signal, obj/machinery/telecomms/machine_from)
 

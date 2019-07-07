@@ -22,7 +22,7 @@
 	icon_screen = "supply"
 	light_color = "#b88b2e"
 	req_access = list(access_cargo)
-	circuit = /obj/item/weapon/circuitboard/supplycomp
+	circuit = /obj/item/weapon/circuitboard/supplycomp/control
 	authorization = SUP_SEND_SHUTTLE | SUP_ACCEPT_ORDERS
 
 /obj/machinery/computer/supplycomp/attack_ai(var/mob/user as mob)
@@ -30,6 +30,8 @@
 
 /obj/machinery/computer/supplycomp/attack_hand(var/mob/user as mob)
 	if(..())
+		return
+	if(!allowed(user))
 		return
 	user.set_machine(src)
 	ui_interact(user)
@@ -166,10 +168,10 @@
 	data["supply_packs"] = pack_list
 	data["orders"] = orders
 	data["receipts"] = receipts
-	data["contraband"] = can_order_contraband
+	data["contraband"] = can_order_contraband || (authorization & SUP_CONTRABAND)
 
 	// update the ui if it exists, returns null if no ui is passed/found
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnanoui.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		// the ui does not exist, so we'll create a new() one
         // for a list of parameters and their descriptions see the code docs in \code\modules\nano\nanoui.dm

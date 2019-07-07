@@ -18,14 +18,16 @@
 		if(!temp || !temp.is_usable())
 			H << "<font color='red'>You can't use your hand.</font>"
 			return
+	if(H.lying)
+		return
 	M.break_cloak()
 
 	..()
 
 	// Should this all be in Touch()?
 	if(istype(H))
-		if(get_accuracy_penalty(H) && H != src)	//Should only trigger if they're not aiming well
-			var/hit_zone = get_zone_with_miss_chance(H.zone_sel.selecting, src, get_accuracy_penalty(H))
+		if(H.get_accuracy_penalty() && H != src)	//Should only trigger if they're not aiming well
+			var/hit_zone = get_zone_with_miss_chance(H.zone_sel.selecting, src, H.get_accuracy_penalty())
 			if(!hit_zone)
 				H.do_attack_animation(src)
 				playsound(loc, 'sound/weapons/punchmiss.ogg', 25, 1, -1)
@@ -91,7 +93,7 @@
 				spawn(30)
 					cpr_time = 1
 
-				H.visible_message("<span class='danger'>\The [H] is trying perform CPR on \the [src]!</span>")
+				H.visible_message("<span class='danger'>\The [H] is trying to perform CPR on \the [src]!</span>")
 
 				if(!do_after(H, 30))
 					return
@@ -121,6 +123,7 @@
 			var/obj/item/weapon/grab/G = new /obj/item/weapon/grab(M, src)
 			if(buckled)
 				M << "<span class='notice'>You cannot grab [src], [TT.he] is buckled in!</span>"
+				return
 			if(!G)	//the grab will delete itself in New if affecting is anchored
 				return
 			M.put_in_active_hand(G)
@@ -235,7 +238,7 @@
 				H.visible_message("<span class='danger'>[attack_message]</span>")
 
 			playsound(loc, ((miss_type) ? (miss_type == 1 ? attack.miss_sound : 'sound/weapons/thudswoosh.ogg') : attack.attack_sound), 25, 1, -1)
-			
+
 			add_attack_logs(H,src,"Melee attacked with fists (miss/block)")
 
 			if(miss_type)

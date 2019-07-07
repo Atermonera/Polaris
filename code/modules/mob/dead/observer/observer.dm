@@ -143,8 +143,8 @@
 		var/mob/observer/dead/M = src
 		M.manifest(user)
 
-/mob/observer/dead/CanPass(atom/movable/mover, turf/target, height=0, air_group=0)
-	return 1
+/mob/observer/dead/CanPass(atom/movable/mover, turf/target)
+	return TRUE
 /*
 Transfer_mind is there to check if mob is being deleted/not going to have a body.
 Works together with spawning an observer, noted above.
@@ -156,6 +156,7 @@ Works together with spawning an observer, noted above.
 	if(!client) return 0
 
 	handle_regular_hud_updates()
+	handle_vision()
 
 /mob/proc/ghostize(var/can_reenter_corpse = 1)
 	if(key)
@@ -393,7 +394,7 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		if (!target)//Make sure we actually have a target
 			return
 		else
-			var/mob/M = getmobs()[target] //Destination mob
+			var/mob/M = target //Destination mob
 			var/turf/T = get_turf(M) //Turf of the destination mob
 
 			if(T && isturf(T))	//Make sure the turf exists, then move the source to that destination.
@@ -492,7 +493,7 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 
 
 	//find a viable mouse candidate
-	var/mob/living/simple_animal/mouse/host
+	var/mob/living/simple_mob/animal/passive/mouse/host
 	var/obj/machinery/atmospherics/unary/vent_pump/vent_found
 	var/list/found_vents = list()
 	for(var/obj/machinery/atmospherics/unary/vent_pump/v in machines)
@@ -500,7 +501,7 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 			found_vents.Add(v)
 	if(found_vents.len)
 		vent_found = pick(found_vents)
-		host = new /mob/living/simple_animal/mouse(vent_found)
+		host = new /mob/living/simple_mob/animal/passive/mouse(vent_found)
 	else
 		src << "<span class='warning'>Unable to find any unwelded vents to spawn mice at.</span>"
 

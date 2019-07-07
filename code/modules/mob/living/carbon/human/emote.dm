@@ -29,7 +29,7 @@
 				m_type = 1
 
 		//Machine-only emotes
-		if("ping", "beep", "buzz", "yes", "no", "rcough", "rsneeze")
+		if("ping", "beep", "buzz", "yes", "ye", "no", "rcough", "rsneeze")
 
 			if(!isSynthetic())
 				src << "<span class='warning'>You are not a synthetic.</span>"
@@ -52,7 +52,7 @@
 			else if(act == "ping")
 				display_msg = "pings"
 				use_sound = 'sound/machines/ping.ogg'
-			else if(act == "yes")
+			else if(act == "yes" || act == "ye")
 				display_msg = "emits an affirmative blip"
 				use_sound = 'sound/machines/synth_yes.ogg'
 			else if(act == "no")

@@ -42,7 +42,6 @@ var/global/list/default_medbay_channels = list(
 	var/adhoc_fallback = FALSE //Falls back to 'radio' mode if subspace not available
 	var/syndie = 0//Holder to see if it's a syndicate encrypted radio
 	var/centComm = 0//Holder to see if it's a CentCom encrypted radio
-	flags = CONDUCT
 	slot_flags = SLOT_BELT
 	throw_speed = 2
 	throw_range = 9
@@ -78,7 +77,7 @@ var/global/list/default_medbay_channels = list(
 	return ..()
 
 
-/obj/item/device/radio/initialize()
+/obj/item/device/radio/Initialize()
 	. = ..()
 	if(frequency < RADIO_LOW_FREQ || frequency > RADIO_HIGH_FREQ)
 		frequency = sanitize_frequency(frequency, RADIO_LOW_FREQ, RADIO_HIGH_FREQ)
@@ -119,7 +118,7 @@ var/global/list/default_medbay_channels = list(
 	if(syndie)
 		data["useSyndMode"] = 1
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnanoui.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, "radio_basic.tmpl", "[name]", 400, 430)
 		ui.set_initial_data(data)
@@ -230,7 +229,7 @@ var/global/list/default_medbay_channels = list(
 		return 1
 
 	if(.)
-		GLOB.nanomanager.update_uis(src)
+		SSnanoui.update_uis(src)
 
 /obj/item/device/radio/proc/autosay(var/message, var/from, var/channel) //BS12 EDIT
 	var/datum/radio_frequency/connection = null
@@ -420,7 +419,7 @@ var/global/list/default_medbay_channels = list(
 			subspace_transmission = FALSE
 			return Broadcast_Message(connection, M, voicemask, pick(M.speak_emote),
 					  src, message, displayname, jobname, real_name, M.voice_name,
-					  signal.transmission_method, signal.data["compression"], list(position.z), connection.frequency,verb,speaking)
+					  signal.transmission_method, signal.data["compression"], GetConnectedZlevels(position.z), connection.frequency,verb,speaking)
 
   /* ###### Intercoms and station-bounced radios ###### */
 
@@ -479,10 +478,9 @@ var/global/list/default_medbay_channels = list(
 
 	//THIS IS TEMPORARY. YEAH RIGHT
 	if(!connection)	return 0	//~Carn
-
 	return Broadcast_Message(connection, M, voicemask, pick(M.speak_emote),
 					  src, message, displayname, jobname, real_name, M.voice_name,
-					  filter_type, signal.data["compression"], list(position.z), connection.frequency,verb,speaking)
+					  filter_type, signal.data["compression"], GetConnectedZlevels(position.z), connection.frequency,verb,speaking)
 
 
 /obj/item/device/radio/hear_talk(mob/M as mob, msg, var/verb = "says", var/datum/language/speaking = null)
@@ -714,7 +712,7 @@ var/global/list/default_medbay_channels = list(
 		. = 1
 
 	if(.)
-		GLOB.nanomanager.update_uis(src)
+		SSnanoui.update_uis(src)
 
 /obj/item/device/radio/borg/interact(mob/user as mob)
 	if(!on)
@@ -743,7 +741,7 @@ var/global/list/default_medbay_channels = list(
 	data["has_subspace"] = 1
 	data["subspace"] = subspace_transmission
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnanoui.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, "radio_basic.tmpl", "[name]", 400, 430)
 		ui.set_initial_data(data)
@@ -769,6 +767,7 @@ var/global/list/default_medbay_channels = list(
 	icon_state = "red_phone"
 	listening = 1
 	name = "phone"
+	anchored = FALSE
 
 /obj/item/device/radio/phone/medbay
 	frequency = MED_I_FREQ

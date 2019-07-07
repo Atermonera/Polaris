@@ -10,6 +10,7 @@
 	path = /obj/item/clothing/under/blazer/skirt
 
 /datum/gear/uniform/cheongsam
+	description = "Various color variations of an old earth dress style. They are pretty close fitting around the waist."
 	display_name = "cheongsam selection"
 
 /datum/gear/uniform/cheongsam/New()
@@ -21,6 +22,7 @@
 	gear_tweaks += new/datum/gear_tweak/path(sortAssoc(cheongasms))
 
 /datum/gear/uniform/croptop
+	description = "Light shirts which shows the midsection of the wearer."
 	display_name = "croptop selection"
 
 /datum/gear/uniform/croptop/New()
@@ -160,6 +162,26 @@
 	display_name = "skirt, hos"
 	path = /obj/item/clothing/under/rank/head_of_security/skirt
 	allowed_roles = list("Head of Security")
+
+/datum/gear/uniform/job_turtle/science
+	display_name = "turtleneck, science"
+	path = /obj/item/clothing/under/rank/scientist/turtleneck
+	allowed_roles = list("Research Director", "Scientist", "Roboticist", "Xenobiologist")
+
+/datum/gear/uniform/job_turtle/security
+	display_name = "turtleneck, security"
+	path = /obj/item/clothing/under/rank/security/turtleneck
+	allowed_roles = list("Head of Security", "Warden", "Detective", "Security Officer")
+
+/datum/gear/uniform/job_turtle/engineering
+	display_name = "turtleneck, engineering"
+	path = /obj/item/clothing/under/rank/engineer/turtleneck
+	allowed_roles = list("Chief Engineer", "Atmospheric Technician", "Station Engineer")
+
+/datum/gear/uniform/job_turtle/medical
+	display_name = "turtleneck, medical"
+	path = /obj/item/clothing/under/rank/medical/turtleneck
+	allowed_roles = list("Chief Medical Officer", "Paramedic", "Medical Doctor", "Psychologist", "Search and Rescue", "Chemist")
 
 /datum/gear/uniform/jeans_qm
 	display_name = "jeans, QM"
@@ -400,14 +422,12 @@
 	path = /obj/item/clothing/under/focal
 
 /datum/gear/uniform/mbill
-	display_name = "outfit, major bill's (Cargo)"
+	display_name = "outfit, major bill's"
 	path = /obj/item/clothing/under/mbill
-	allowed_roles = list("Quartermaster","Cargo Technician")
 
 /datum/gear/uniform/pcrc
 	display_name = "uniform, PCRC (Security)"
 	path = /obj/item/clothing/under/pcrc
-	cost = 2
 	allowed_roles = list("Security Officer","Head of Security","Warden")
 
 /datum/gear/uniform/brandsuit/grayson
@@ -457,3 +477,28 @@
 /datum/gear/uniform/westernbustle
 	display_name = "western bustle"
 	path = /obj/item/clothing/under/dress/westernbustle
+
+/datum/gear/uniform/circuitry
+	display_name = "jumpsuit, circuitry (empty)"
+	path = /obj/item/clothing/under/circuitry
+
+/datum/gear/uniform/sleekoverall
+	display_name = "sleek overalls"
+	path = /obj/item/clothing/under/overalls/sleek
+
+/datum/gear/uniform/sarired
+	display_name = "sari, red"
+	path = /obj/item/clothing/under/dress/sari
+
+/datum/gear/uniform/sarigreen
+	display_name = "sari, green"
+	path = /obj/item/clothing/under/dress/sari/green
+
+/datum/gear/uniform/wrappedcoat
+	display_name = "modern wrapped coat"
+	path = /obj/item/clothing/under/moderncoat
+
+/datum/gear/uniform/ascetic
+	display_name = "plain ascetic garb"
+	path = /obj/item/clothing/under/ascetic
+

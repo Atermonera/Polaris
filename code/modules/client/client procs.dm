@@ -44,7 +44,7 @@
 	//Admin PM
 	if(href_list["priv_msg"])
 		var/client/C = locate(href_list["priv_msg"])
-		if(ismob(C)) 		//Old stuff can feed-in mobs instead of clients
+		if(ismob(C)) 		//Old stuff can feed-in mobs instead ofGLOB.clients
 			var/mob/M = C
 			C = M.client
 		cmd_admin_pm(C,null)
@@ -57,7 +57,7 @@
 		if(mute_irc)
 			usr << "<span class='warning'You cannot use this as your client has been muted from sending messages to the admins on IRC</span>"
 			return
-		cmd_admin_irc_pm(href_list["irc_msg"])
+		send2adminirc(href_list["irc_msg"])
 		return
 
 
@@ -108,8 +108,10 @@
 	src << "<font color='red'>If the title screen is black, resources are still downloading. Please be patient until the title screen appears.</font>"
 
 
-	clients += src
-	directory[ckey] = src
+	GLOB.clients += src
+	GLOB.directory[ckey] = src
+
+	GLOB.ahelp_tickets.ClientLogin(src)
 
 	//Admin Authorisation
 	holder = admin_datums[ckey]
@@ -150,7 +152,7 @@
 	log_client_to_db()
 
 	send_resources()
-	GLOB.nanomanager.send_resources(src)
+	SSnanoui.send_resources(src)
 
 	if(!void)
 		void = new()
@@ -176,8 +178,9 @@
 	if(holder)
 		holder.owner = null
 		admins -= src
-	directory -= ckey
-	clients -= src
+	GLOB.ahelp_tickets.ClientLogout(src)
+	GLOB.directory -= ckey
+	GLOB.clients -= src
 	return ..()
 
 /client/Destroy()
@@ -317,6 +320,7 @@
 		'html/images/sglogo.png',
 		'html/images/talisman.png',
 		'html/images/paper_bg.png',
+		'html/images/no_image32.png',
 		'icons/pda_icons/pda_atmos.png',
 		'icons/pda_icons/pda_back.png',
 		'icons/pda_icons/pda_bell.png',
@@ -386,3 +390,8 @@ client/verb/character_setup()
 			. = R.group[1]
 		else
 			CRASH("Age check regex failed for [src.ckey]")
+
+/client/vv_edit_var(var_name, var_value)
+	if(var_name == NAMEOF(src, holder))
+		return FALSE
+	return ..()

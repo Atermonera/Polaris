@@ -38,11 +38,12 @@
 	var/bolt_up_sound = 'sound/machines/boltsup.ogg'
 	var/bolt_down_sound = 'sound/machines/boltsdown.ogg'
 
-/obj/machinery/door/airlock/attack_generic(var/mob/user, var/damage)
+/obj/machinery/door/airlock/attack_generic(var/mob/living/user, var/damage)
 	if(stat & (BROKEN|NOPOWER))
-		if(damage >= 10)
+		if(damage >= STRUCTURE_MIN_DAMAGE_THRESHOLD)
 			if(src.locked || src.welded)
 				visible_message("<span class='danger'>\The [user] begins breaking into \the [src] internals!</span>")
+				user.set_AI_busy(TRUE) // If the mob doesn't have an AI attached, this won't do anything.
 				if(do_after(user,10 SECONDS,src))
 					src.locked = 0
 					src.welded = 0
@@ -50,6 +51,7 @@
 					open(1)
 					if(prob(25))
 						src.shock(user, 100)
+				user.set_AI_busy(FALSE)
 			else if(src.density)
 				visible_message("<span class='danger'>\The [user] forces \the [src] open!</span>")
 				open(1)
@@ -424,9 +426,28 @@
 	icon = 'icons/obj/doors/shuttledoors_vertical.dmi'
 	assembly_type = /obj/structure/door_assembly/door_assembly_voidcraft/vertical
 
+
+/datum/category_item/catalogue/anomalous/precursor_a/alien_airlock
+	name = "Precursor Alpha Object - Doors"
+	desc = "This object appears to be used in order to restrict or allow access to \
+	rooms based on its physical state. In other words, a door. \
+	Despite being designed and created by unknown ancient alien hands, this door has \
+	a large number of similarities to the conventional airlock, such as being driven by \
+	electricity, opening and closing by physically moving, and being air tight. \
+	It also operates by responding to signals through internal electrical conduits. \
+	These characteristics make it possible for one with experience with a multitool \
+	to manipulate the door.\
+	<br><br>\
+	The symbol on the door does not match any living species' patterns, giving further \
+	implications that this door is very old, and yet it remains operational after \
+	thousands of years. It is unknown if that is due to superb construction, or \
+	unseen autonomous maintenance having been performed."
+	value = CATALOGUER_REWARD_EASY
+
 /obj/machinery/door/airlock/alien
 	name = "alien airlock"
 	desc = "You're fairly sure this is a door."
+	catalogue_data = list(/datum/category_item/catalogue/anomalous/precursor_a/alien_airlock)
 	icon = 'icons/obj/doors/Dooralien.dmi'
 	explosion_resistance = 20
 	secured_wires = TRUE
@@ -474,9 +495,6 @@ About the new airlock wires panel:
 			user.halloss += 10
 			user.stunned += 10
 			return
-	..(user)
-
-/obj/machinery/door/airlock/bumpopen(mob/living/simple_animal/user as mob)
 	..(user)
 
 /obj/machinery/door/airlock/proc/isElectrified()
@@ -696,7 +714,7 @@ About the new airlock wires panel:
 
 	data["commands"] = commands
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnanoui.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "door_control.tmpl", "Door Controls", 450, 350, state = state)
 		ui.set_initial_data(data)
@@ -751,7 +769,7 @@ About the new airlock wires panel:
 			if (user)
 				src.attack_ai(user)
 
-/obj/machinery/door/airlock/CanPass(atom/movable/mover, turf/target, height=0, air_group=0)
+/obj/machinery/door/airlock/CanPass(atom/movable/mover, turf/target)
 	if (src.isElectrified())
 		if (istype(mover, /obj/item))
 			var/obj/item/i = mover
@@ -1173,7 +1191,7 @@ About the new airlock wires panel:
 	else
 		wires = new/datum/wires/airlock(src)
 
-/obj/machinery/door/airlock/initialize()
+/obj/machinery/door/airlock/Initialize()
 	if(src.closeOtherId != null)
 		for (var/obj/machinery/door/airlock/A in machines)
 			if(A.closeOtherId == src.closeOtherId && A != src)
@@ -1226,3 +1244,24 @@ About the new airlock wires panel:
 		src.open()
 		src.lock()
 	return
+
+
+/obj/machinery/door/airlock/rcd_values(mob/living/user, obj/item/weapon/rcd/the_rcd, passed_mode)
+	switch(passed_mode)
+		if(RCD_DECONSTRUCT)
+			// Old RCD code made it cost 10 units to decon an airlock.
+			// Now the new one costs ten "sheets".
+			return list(
+				RCD_VALUE_MODE = RCD_DECONSTRUCT,
+				RCD_VALUE_DELAY = 5 SECONDS,
+				RCD_VALUE_COST = RCD_SHEETS_PER_MATTER_UNIT * 10
+			)
+	return FALSE
+
+/obj/machinery/door/airlock/rcd_act(mob/living/user, obj/item/weapon/rcd/the_rcd, passed_mode)
+	switch(passed_mode)
+		if(RCD_DECONSTRUCT)
+			to_chat(user, span("notice", "You deconstruct \the [src]."))
+			qdel(src)
+			return TRUE
+	return FALSE

@@ -20,8 +20,7 @@
 	var/active_regen = FALSE //Used for the regenerate proc in human_powers.dm
 	var/active_regen_delay = 300
 
-/mob/living/carbon/human/New(var/new_loc, var/new_species = null)
-
+/mob/living/carbon/human/Initialize(mapload, var/new_species = null)
 	if(!dna)
 		dna = new /datum/dna(null)
 		// Species name is handled by set_species()
@@ -42,7 +41,7 @@
 
 	human_mob_list |= src
 
-	..()
+	. = ..()
 
 	hide_underwear.Cut()
 	for(var/category in global_underwear.categories_by_name)
@@ -1121,7 +1120,7 @@
 	if(species.default_language)
 		add_language(species.default_language)
 
-	if(species.icon_scale != 1)
+	if(species.icon_scale_x != 1 || species.icon_scale_y != 1)
 		update_transform()
 
 	if(species.base_color && default_colour)
@@ -1147,6 +1146,15 @@
 	species.handle_post_spawn(src)
 
 	maxHealth = species.total_health
+
+	if(LAZYLEN(descriptors))
+		descriptors = null
+
+	if(LAZYLEN(species.descriptors))
+		descriptors = list()
+		for(var/desctype in species.descriptors)
+			var/datum/mob_descriptor.descriptor = species.descriptors[desctype]
+			descriptors[desctype] = descriptor.default_value
 
 	spawn(0)
 		if(regen_icons) regenerate_icons()

@@ -107,7 +107,13 @@
 
 /datum/design/item/mechfab/gygax
 	category = "Gygax"
-
+/*						//uncomment me to make the Serenity produceable in Robotics
+/datum/design/item/mechfab/gygax/chassis/serenity
+	name = "Serenity Chassis"
+	id = "serenity_chassis"
+	build_path = /obj/item/mecha_parts/chassis/serenity
+	materials = list(DEFAULT_WALL_MATERIAL = 18750, "phoron" = 4000)
+*/
 /datum/design/item/mechfab/gygax/chassis
 	name = "Gygax Chassis"
 	id = "gygax_chassis"
@@ -222,6 +228,67 @@
 	build_path = /obj/item/mecha_parts/part/durand_armour
 	time = 60
 	materials = list(DEFAULT_WALL_MATERIAL = 37500, "uranium" = 7500)
+
+/datum/design/item/mechfab/janus
+	category = "Janus"
+	req_tech = list(TECH_MATERIAL = 7, TECH_BLUESPACE = 5, TECH_MAGNET = 6, TECH_PHORON = 3, TECH_ARCANE = 1, TECH_PRECURSOR = 2)
+
+/datum/design/item/mechfab/janus/chassis
+	name = "Janus Chassis"
+	id = "janus_chassis"
+	build_path = /obj/item/mecha_parts/chassis/janus
+	time = 100
+	materials = list(MAT_DURASTEEL = 19000, MAT_MORPHIUM = 10500, MAT_PLASTEEL = 5500, MAT_LEAD = 2500)
+	req_tech = list(TECH_MATERIAL = 7, TECH_BLUESPACE = 5, TECH_MAGNET = 6, TECH_PHORON = 3, TECH_ARCANE = 1, TECH_PRECURSOR = 3)
+
+/datum/design/item/mechfab/janus/torso
+	name = "Imperion Torso"
+	id = "janus_torso"
+	build_path = /obj/item/mecha_parts/part/janus_torso
+	time = 300
+	materials = list(DEFAULT_WALL_MATERIAL = 30000, MAT_DURASTEEL = 8000, MAT_MORPHIUM = 10000, MAT_GOLD = 5000, MAT_VERDANTIUM = 5000)
+
+/datum/design/item/mechfab/janus/head
+	name = "Imperion Head"
+	id = "janus_head"
+	build_path = /obj/item/mecha_parts/part/janus_head
+	time = 200
+	materials = list(DEFAULT_WALL_MATERIAL = 30000, MAT_DURASTEEL = 2000, MAT_MORPHIUM = 6000, MAT_GOLD = 5000)
+
+/datum/design/item/mechfab/janus/left_arm
+	name = "Prototype Gygax Left Arm"
+	id = "janus_left_arm"
+	build_path = /obj/item/mecha_parts/part/janus_left_arm
+	time = 200
+	materials = list(DEFAULT_WALL_MATERIAL = 30000, MAT_METALHYDROGEN = 3000, MAT_DURASTEEL = 2000, MAT_MORPHIUM = 3000, MAT_GOLD = 5000, MAT_DIAMOND = 7000)
+
+/datum/design/item/mechfab/janus/right_arm
+	name = "Prototype Gygax Right Arm"
+	id = "janus_right_arm"
+	build_path = /obj/item/mecha_parts/part/janus_right_arm
+	time = 200
+	materials = list(DEFAULT_WALL_MATERIAL = 30000, MAT_METALHYDROGEN = 3000, MAT_DURASTEEL = 2000, MAT_MORPHIUM = 3000, MAT_GOLD = 5000, MAT_DIAMOND = 7000)
+
+/datum/design/item/mechfab/janus/left_leg
+	name = "Prototype Durand Left Leg"
+	id = "janus_left_leg"
+	build_path = /obj/item/mecha_parts/part/janus_left_leg
+	time = 200
+	materials = list(DEFAULT_WALL_MATERIAL = 30000, MAT_METALHYDROGEN = 3000, MAT_DURASTEEL = 2000, MAT_MORPHIUM = 3000, MAT_GOLD = 5000, MAT_URANIUM = 7000)
+
+/datum/design/item/mechfab/janus/right_leg
+	name = "Prototype Durand Right Leg"
+	id = "janus_right_leg"
+	build_path = /obj/item/mecha_parts/part/janus_right_leg
+	time = 200
+	materials = list(DEFAULT_WALL_MATERIAL = 30000, MAT_METALHYDROGEN = 3000, MAT_DURASTEEL = 2000, MAT_MORPHIUM = 3000, MAT_GOLD = 5000, MAT_URANIUM = 7000)
+
+/datum/design/item/mechfab/janus/phase_coil
+	name = "Janus Phase Coil"
+	id = "janus_coil"
+	build_path = /obj/item/prop/alien/phasecoil
+	time = 600
+	materials = list(MAT_SUPERMATTER = 2000, MAT_PLASTEEL = 60000, MAT_URANIUM = 3250, MAT_DURASTEEL = 2000, MAT_MORPHIUM = 3000, MAT_GOLD = 5000, MAT_VERDANTIUM = 5000, MAT_DIAMOND = 10000, MAT_LEAD = 15000)
 
 /datum/design/item/mecha
 	build_type = MECHFAB
@@ -565,3 +632,28 @@
 	materials = list(DEFAULT_WALL_MATERIAL = 562, "glass" = 562)
 	build_path = /obj/item/device/flash/synthetic
 	category = "Misc"
+
+/*
+ * Non-Mech Vehicles
+ */
+
+/datum/design/item/mechfab/vehicle
+	build_type = MECHFAB
+	category = "Vehicle"
+	req_tech = list(TECH_MATERIAL = 5, TECH_ENGINEERING = 6)
+
+/datum/design/item/mechfab/vehicle/spacebike_chassis
+	name = "Spacebike Chassis"
+	desc = "A space-bike's un-assembled frame."
+	id = "vehicle_chassis_spacebike"
+	req_tech = list(TECH_MATERIAL = 5, TECH_ENGINEERING = 6, TECH_BLUESPACE = 3, TECH_PHORON = 3)
+	materials = list(DEFAULT_WALL_MATERIAL = 12000, "silver" = 3000, "phoron" = 3000, "osmium" = 1000)
+	build_path = /obj/item/weapon/vehicle_assembly/spacebike
+
+/datum/design/item/mechfab/vehicle/quadbike_chassis
+	name = "Quadbike Chassis"
+	desc = "A space-bike's un-assembled frame."
+	id = "vehicle_chassis_quadbike"
+	req_tech = list(TECH_MATERIAL = 5, TECH_ENGINEERING = 6, TECH_MAGNET = 3, TECH_POWER = 2)
+	materials = list(DEFAULT_WALL_MATERIAL = 15000, "silver" = 3000, "plastic" = 3000, "osmium" = 1000)
+	build_path = /obj/item/weapon/vehicle_assembly/quadbike
