@@ -12,12 +12,12 @@ var/list/grass_types = list(
 		)
 	var/grass_chance = 20
 
-	var/animal_chance = 1
+//	var/animal_chance = 1
 
-	// Weighted spawn list.
-	var/list/animal_types = list(
-		/mob/living/simple_mob/animal/passive/tindalos = 1
-		)
+//	// Weighted spawn list.
+//	var/list/animal_types = list(
+//		/mob/living/simple_mob/animal/passive/tindalos = 1
+//		)
 
 	var/list/grass_types = list(
 		/obj/structure/flora/ausbushes/sparsegrass,
@@ -39,15 +39,15 @@ var/list/grass_types = list(
 	grass_chance = 5
 	var/tree_chance = 2
 
-	animal_chance = 0.5
+//	animal_chance = 0.5
 
-	animal_types = list(
-		/mob/living/simple_mob/animal/sif/diyaab = 10,
-		/mob/living/simple_mob/animal/sif/glitterfly = 2,
-		/mob/living/simple_mob/animal/sif/duck = 2,
-		/mob/living/simple_mob/animal/sif/shantak/retaliate = 2,
-		/obj/random/mob/multiple/sifmobs = 1
-		)
+//	animal_types = list(
+//		/mob/living/simple_mob/animal/sif/diyaab = 10,
+//		/mob/living/simple_mob/animal/sif/glitterfly = 2,
+//		/mob/living/simple_mob/animal/sif/duck = 2,
+//		/mob/living/simple_mob/animal/sif/shantak/retaliate = 2,
+//		/obj/random/mob/multiple/sifmobs = 1
+//		)
 
 	grass_types = list(
 		/obj/structure/flora/sif/eyes = 1,
@@ -71,9 +71,9 @@ var/list/grass_types = list(
 		var/grass_type = pickweight(grass_types)
 		new grass_type(src)
 
-	if(animal_chance && prob(animal_chance) && !check_density())
-		var/animal_type = pickweight(animal_types)
-		new animal_type(src)
+//	if(animal_chance && prob(animal_chance) && !check_density())
+//		var/animal_type = pickweight(animal_types)
+//		new animal_type(src)
 
 	. = ..()
 
