@@ -62,7 +62,7 @@ new = 0
 # Parse PR body for changelog entries
 print('Reading changelogs...')
 for line in args.pr_body.splitlines():
-	print(f"Checking line '{line}'")
+	print(f"Checking lin '{line}'")
 	if line[:1] == "??": # Find the start of the changelog
 		print("Found opening :cl: tag")
 		if incltag == True: # If we're already reading logs, skip
